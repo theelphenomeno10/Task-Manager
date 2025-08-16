@@ -1,11 +1,5 @@
 const asyncWrapper = async (fn) => {
-    return async () => {
-        try {
-            await fn(req, res, next)
-        } catch (error) {
-            next(error)
-        }
-    }
+    return Promise.resolve(fn(req, res, next)).catch(next)
 }
 
 module.exports = asyncWrapper
