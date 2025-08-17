@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const tasks = require('./route/tasks.js')
+const tasks = require('./routes/tasks.js')
 const errorHandler = require('./middlewares/error_handling.js')
 
 app.use(express.json())
