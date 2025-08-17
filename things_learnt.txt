@@ -1,0 +1,16 @@
+1. Connecting with MongoDB
+- Use .env file to store password and use .gitignore to avoid leaking it
+- Must create a Schema file to shape how user input data
+- In the Schema file you must export the model so other files can query on it
+
+2. Error definition files
+- Create a class that inherits Error so it will still have fundamentals attribute of Error
+- Create and export a function that create that class of Error
+
+3. Middlewares
+- Must have one that handle Error
+- Must have one that try catch for you
+
+4. Git and GitHub
+- At first you have to init, add, commit, branch to push
+- After that you just have to add, commit to push
