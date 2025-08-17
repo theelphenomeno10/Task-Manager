@@ -18,4 +18,4 @@ const errorHandling = (err, req, res, next) => {
     return res.status(500).json({msg: 'Server is having some undocumented issues, please kindly wait'})
 }
 
-module.exports = errorHandling
+module.exports = {CustomAPIError, errorHandling}
