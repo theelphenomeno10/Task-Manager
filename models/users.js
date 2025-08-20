@@ -23,6 +23,11 @@ const User_Schema = new mongoose.Schema({
         trim: true,
         minlength: 6,
         select: false
+    },
+
+    role: {
+        type: String,
+        default: guest
     }
 })
 
