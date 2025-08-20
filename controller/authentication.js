@@ -1,3 +1,5 @@
 const generateToken = require('../utils/generate_token')
 
-const register = 
+const register = async (req, res) => {
+    
+}
