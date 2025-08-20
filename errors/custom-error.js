@@ -1,7 +1,8 @@
 class CustomAPIError extends Error {
-    constructor(message, error_code) {
+    constructor(message, statusCode) {
         super(message)
-        this.error_code = error_code
+        this.statusCode = statusCode
+        this.name = "Custom API Error"
     }
 }
 
@@ -9,4 +10,4 @@ const createError = (message, statusCode) => {
     return new CustomAPIError(message, statusCode)
 }
 
-module.exports = {createError, CustomAPIError}
+module.exports = {createError, CustomAPIError} 
