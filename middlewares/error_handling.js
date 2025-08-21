@@ -1,4 +1,4 @@
-const {CustomAPIError} = require('../errors/errors.js')
+const {CustomAPIError} = require('../errors/custom-error.js')
 
 const errorHandling = (err, req, res, next) => {
     if (err instanceof CustomAPIError) {
