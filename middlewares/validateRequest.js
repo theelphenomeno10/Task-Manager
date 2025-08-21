@@ -14,3 +14,5 @@ const validateRequest = async (req, res, next) => {
 
     next()
 }
+
+module.exports = validateRequest
