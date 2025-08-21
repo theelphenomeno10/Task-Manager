@@ -6,7 +6,7 @@ const authRouter = require('./routes/authentication.js')
 
 app.use(express.json())
 
-app.use('/', authRouter)
+app.use('/api/v1', authRouter)
 app.use('/api/v1/tasks', tasks)
 
 app.use(errorHandling);

@@ -21,11 +21,11 @@ const register = asyncWrapper (async (req, res) => {
 })
 
 const login = asyncWrapper (async (req, res) => {
-    const {username, password} = req.body
-    const user = await User.findOne({username})
+    const {username, password, email} = req.body
+    const user = await User.findOne({username}).select("+password")
 
     if (!user || !(await user.comparePassword(password))) {
-        return res.status(400).json({msg: "Invalid username or password"})
+        return res.status(400).json({ msg: "Invalid credentials" })
     }
 
     const token = generateToken(user)
