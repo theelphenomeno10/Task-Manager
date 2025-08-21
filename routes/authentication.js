@@ -4,7 +4,7 @@ const router = express.Router()
 const {
     register,
     login
-} = require('../controllers/authetication.js')
+} = require('../controllers/authentication.js')
 
 const {
     registerValidator,
