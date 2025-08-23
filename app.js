@@ -3,7 +3,9 @@ const app = express()
 const tasks = require('./routes/tasks.js')
 const {errorHandling} = require('./middlewares/error_handling.js')
 const authRouter = require('./routes/authentication.js')
+const morganMiddleware = require('./middlewares/morgan.js')
 
+app.use(morganMiddleware)
 app.use(express.json())
 
 app.use('/api/v1', authRouter)
