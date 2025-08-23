@@ -2,7 +2,7 @@ const generateToken = require('../utils/generate_token')
 const User = require('../models/users.js')
 const asyncWrapper = require('../middlewares/async.js')
 
-const register = asyncWrapper (async (req, res) => {
+const register = asyncWrapper (async (req, res, next) => {
     const {username, password, email, role} = req.body
     let assignedRole = "user"
 
@@ -20,7 +20,7 @@ const register = asyncWrapper (async (req, res) => {
     })
 })
 
-const login = asyncWrapper (async (req, res) => {
+const login = asyncWrapper (async (req, res, next) => {
     const {username, password, email} = req.body
     const user = await User.findOne({username}).select("+password")
 
