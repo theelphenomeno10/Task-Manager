@@ -1,6 +1,9 @@
 const {CustomAPIError} = require('../errors/custom-error.js')
+const logger = require('../utils/logger.js')
 
 const errorHandling = (err, req, res, next) => {
+    logger.error(err.stack || err)
+
     if (err instanceof CustomAPIError) {
         if (process.env.NODE_ENV === 'development') {
             return res.status(err.statusCode).json({stack: err.stack})
