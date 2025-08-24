@@ -18,7 +18,7 @@ const prodFormat = combine(
 
 const logger = createLogger({
     level: process.env.NODE_LEVEL || "info",
-    format: process.env.NODE_ENV === "development" ? devFormat : logFormat,
+    format: process.env.NODE_ENV === "development" ? devFormat : prodFormat,
     transports: [
         new transports.Console({format: combine(logFormat, colorize())}),
         new transports.File({filename: "logs/error.log", level: "error"}),
