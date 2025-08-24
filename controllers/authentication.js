@@ -1,4 +1,4 @@
-const generateToken = require('../utils/generate_token')
+const {generateAccessToken} = require('../utils/generate_token')
 const User = require('../models/users.js')
 const asyncWrapper = require('../middlewares/async.js')
 
@@ -11,7 +11,7 @@ const register = asyncWrapper (async (req, res, next) => {
     }
 
     const user = await User.create({username, email, password, assignedRole})
-    const token = generateToken(user)
+    const token = generateAccessToken(user)
 
     res.status(201).json({
         msg: 'User registered successfully',
