@@ -1,6 +1,8 @@
-const {generateAccessToken} = require('../utils/generate_token')
+const {generateAccessToken, generateRefreshToken} = require('../utils/generate_token')
 const User = require('../models/users.js')
 const asyncWrapper = require('../middlewares/async.js')
+const jwt = require('jsonwebtoken')
+const logger = require('../utils/logger.js')
 
 const register = asyncWrapper (async (req, res, next) => {
     const {username, password, email, role} = req.body
@@ -11,12 +13,13 @@ const register = asyncWrapper (async (req, res, next) => {
     }
 
     const user = await User.create({username, email, password, assignedRole})
-    const token = generateAccessToken(user)
+    const access_token = generateAccessToken(user)
+    const refresh_token = generateRefreshToken(user)
 
     res.status(201).json({
         msg: 'User registered successfully',
         user: {username, email},
-        token: token
+        acess_token: access_token,
     })
 })
 
@@ -28,9 +31,46 @@ const login = asyncWrapper (async (req, res, next) => {
         return res.status(400).json({ msg: "Invalid credentials" })
     }
 
-    const token = generateToken(user)
+    const access_token = generateAccessToken(user)
+    const refresh_token = generateRefreshToken(user)
 
-    res.status(200).json({msg: 'Login successful', user: {username, email}, token: token})
+    res.cookie("refreshToken", refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+    })
+
+    res.status(200).json({msg: 'Login successful',
+        user: {username, email},
+        access_token: access_token,
+    })
 })
 
-module.exports = {register, login}
+const refresh = asyncWrapper(async (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken
+
+    if (!refreshToken) {
+        return res.status(401).json({msg: 'Expired refresh token, please login again'})
+    }
+
+    try {
+        const userID = jwt.verify(refreshToken, process.env.REFRESH_KEY)
+        const user = await User.findById(userID)
+
+        if (!user) {
+            return res.status(403).json({msg: 'Invalid refresh token'})
+        }
+
+        const newAccessToken = generateAccessToken(user)
+        const {username, email} = user;
+        res.status(200).json({
+            user: {username, email},
+            access_token: newAccessToken
+        })
+    } catch (error) {
+        logger.error(`Refresh token error: ${error.stack}`)
+        return res.status(403).json({msg: 'Refresh token error'})
+    }
+})
+
+module.exports = {register, login, refresh}
