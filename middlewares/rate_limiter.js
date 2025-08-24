@@ -4,6 +4,7 @@ const asyncWrapper = require('./async.js')
 const logger = require('../utils/logger.js')
 
 const clientRedis = new Redis({
+    port: 6379,
     enableOfflineQueue: false
 })
 

@@ -6,11 +6,14 @@ const authRouter = require('./routes/authentication.js')
 const morganMiddleware = require('./middlewares/morgan.js')
 const helmet = require('helmet')
 const cors = require('cors')
+const rateLimiterMiddleware = require('./middlewares/rate_limiter.js')
 
 app.use(helmet())
 app.use(cors({
     origin: "http://localhost:3000"
 }))
+app.use(rateLimiterMiddleware)
+
 app.use(morganMiddleware)
 app.use(express.json())
 
