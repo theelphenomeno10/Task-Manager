@@ -47,35 +47,36 @@ const login = asyncWrapper (async (req, res, next) => {
 })
 
 const refresh = asyncWrapper(async (req, res, next) => {
-    const refreshToken = req.cookies.refreshToken
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-        return res.status(401).json({msg: 'Expired refresh token, please login again'})
+        return res.status(401).json({ msg: 'Expired refresh token, please login again' });
     }
 
     try {
-        const userID = jwt.verify(refreshToken, process.env.REFRESH_KEY)
-        const user = await User.findById(userID)
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_KEY);
+        const user = await User.findById(decoded.id);
 
         if (!user) {
-            return res.status(403).json({msg: 'Invalid refresh token'})
+            return res.status(403).json({ msg: 'Invalid refresh token' });
         }
 
-        const newAccessToken = generateAccessToken(user)
-        const {username, email} = user;
-        res.status(200).json({
-            user: {username, email},
+        const newAccessToken = generateAccessToken(user);
+        const { username, email } = user;
+
+        return res.status(200).json({
+            user: { username, email },
             access_token: newAccessToken
-        })
+        });
     } catch (error) {
-        logger.error(`Refresh token error: ${error.stack}`)
-        return res.status(403).json({msg: 'Refresh token error'})
+        logger.error(`Refresh token error: ${error.stack}`);
+        return res.status(403).json({ msg: 'Refresh token error' });
     }
-})
+});
 
 const logout = asyncWrapper(async (req, res, next) => {
     try {
-        req.clearCookies("refreshToken", {
+        res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: true,
             sameSite: "strict"

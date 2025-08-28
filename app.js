@@ -7,6 +7,7 @@ const morganMiddleware = require('./middlewares/morgan.js')
 const helmet = require('helmet')
 const cors = require('cors')
 const rateLimiterMiddleware = require('./middlewares/rate_limiter.js')
+const cookieParser = require('cookie-parser')
 
 app.use(helmet())
 app.use(cors({
@@ -16,6 +17,7 @@ app.use(rateLimiterMiddleware)
 
 app.use(morganMiddleware)
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api/v1', authRouter)
 app.use('/api/v1/tasks', tasks)
