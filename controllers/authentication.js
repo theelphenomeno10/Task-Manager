@@ -84,7 +84,7 @@ const logout = asyncWrapper(async (req, res, next) => {
         return res.status(200).json({msg: "Logout successfully"})
     } catch (error) {
         logger.error(`Logout error: ${error.stack}`)
-        return res.status(500).json({"Logout failed"})
+        return res.status(500).json({msg: "Logout failed"})
     }
 })
 
