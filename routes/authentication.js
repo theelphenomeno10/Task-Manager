@@ -3,7 +3,9 @@ const router = express.Router()
 
 const {
     register,
-    login
+    login,
+    refresh,
+    logout
 } = require('../controllers/authentication.js')
 
 const {
@@ -15,5 +17,7 @@ const validateRequest = require('../middlewares/validateRequest.js')
 
 router.route('/register').post(registerValidator, validateRequest, register)
 router.route('/login').post(loginValidator, validateRequest, login)
+router.route('/refresh').post(refresh)
+router.route('/logout').post(logout)
 
 module.exports = router
