@@ -1,4 +1,4 @@
-const {CustomAPIError} = require('../errors/custom-error.js')
+const {CustomAPIError} = require('../errors/custom_error.js')
 const logger = require('../utils/logger.js')
 
 const errorHandling = (err, req, res, next) => {

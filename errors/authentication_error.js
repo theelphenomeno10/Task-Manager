@@ -1,4 +1,4 @@
-const { CustomAPIError } = require('./custom-error')
+const { CustomAPIError } = require('./custom_error')
 
 const AuthErrors = {
   WrongUsername: class extends CustomAPIError {
