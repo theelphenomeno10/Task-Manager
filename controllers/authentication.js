@@ -73,4 +73,19 @@ const refresh = asyncWrapper(async (req, res, next) => {
     }
 })
 
-module.exports = {register, login, refresh}
+const logout = asyncWrapper(async (req, res, next) => {
+    try {
+        req.clearCookies("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict"
+        })
+
+        return res.status(200).json({msg: "Logout successfully"})
+    } catch (error) {
+        logger.error(`Logout error: ${error.stack}`)
+        return res.status(500).json({"Logout failed"})
+    }
+})
+
+module.exports = {register, login, refresh, logout}
