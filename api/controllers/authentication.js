@@ -16,6 +16,12 @@ const register = asyncWrapper (async (req, res, next) => {
     const access_token = generateAccessToken(user)
     const refresh_token = generateRefreshToken(user)
 
+    res.cookie("refreshToken", refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+    })
+
     res.status(201).json({
         msg: 'User registered successfully',
         user: {username, email},
@@ -67,12 +73,12 @@ const refresh = asyncWrapper(async (req, res, next) => {
         return res.status(200).json({
             user: { username, email },
             access_token: newAccessToken
-        });
+        })
     } catch (error) {
         logger.error(`Refresh token error: ${error.stack}`);
         return res.status(403).json({ msg: 'Refresh token error' });
     }
-});
+})
 
 const logout = asyncWrapper(async (req, res, next) => {
     try {
