@@ -1,15 +1,21 @@
 const asyncWrapper = require('../middlewares/async.js')
 const Task = require('../models/tasks.js')
-const {createError} = require('../errors/custom_error.js')
+const dayjs = require('dayjs')
 
 const getAllTask = asyncWrapper(async (req, res, next) => {
-    const tasks = await Task.find({})
+    const tasks = await Task.find({}).lean()
 
     if (!tasks.length) {
         return res.status(404).json({msg: 'No tasks available'})
     }
 
-    return res.status(200).json({tasks})
+    const formattedTasks = tasks.map(t => ({    
+        ...t,
+        expiry_day: dayjs(t.expiry_date).format("DD/MM/YYYY"),
+        expiry_time: dayjs(t.expiry_date).format("HH:mm:ss")
+    }))
+
+    return res.status(200).json({formattedTasks})
 })
 
 const createTask = asyncWrapper(async (req, res, next) => {
@@ -29,7 +35,13 @@ const getTask = asyncWrapper(async (req, res, next) => {
         return res.status(404).json({msg: 'Task not found'})
     }
 
-    return res.status(200).json({task})
+    const formattedTasks = tasks.map(t => ({    
+        ...t,
+        expiry_day: dayjs(t.expiry_date).format("DD:MM:YYYY"),
+        expiry_time: dayjs(t.expiry_date).format("HH:mm:ss")
+    }))
+
+    return res.status(200).json({task: formattedTasks})
 })
 
 const updateTask = asyncWrapper(async (req, res, next) => {
