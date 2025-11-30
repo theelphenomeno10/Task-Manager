@@ -3,7 +3,7 @@ const Task = require('../models/tasks.js')
 const dayjs = require('dayjs')
 
 const getAllTask = asyncWrapper(async (req, res, next) => {
-    const filter = req.user ? { user: req.user.id } : {user: null}
+    const filter = req.user ? { user: req.user.id } : { user: null }
     const tasks = await Task.find(filter).lean()
 
     if (!tasks.length) {
@@ -50,7 +50,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
 const updateTask = asyncWrapper(async (req, res, next) => {
     const {id: taskID} = req.params
     const filter = req.user ? { _id: taskID, user: req.user.id} : { _id: taskID, user: null}
-    const task = await Task.findByIdAndUpdate(taskID, req.body, {
+    const task = await Task.findByIdAndUpdate(filter, req.body, {
         new: true,
         runValidators: true
     })
@@ -64,7 +64,8 @@ const updateTask = asyncWrapper(async (req, res, next) => {
 
 const deleteTask = asyncWrapper(async (req, res, next) => {
     const {id: taskID} = req.params
-    const task = await Task.findByIdAndDelete(taskID)
+    const filter = req.user ? { _id: taskID, user: req.user.id } : { _id: taskID, user: null }
+    const task = await Task.findByIdAndDelete(filter)
 
     if (!task) {
         return res.status(404).json({msg: 'Task not found'})
@@ -73,4 +74,12 @@ const deleteTask = asyncWrapper(async (req, res, next) => {
     return res.status(204).json({task})
 })
 
-module.exports = {getAllTask, createTask, getTask, updateTask, deleteTask}
+const deleteAllTask = asyncWrapper(async (req, res, next) => {
+    const filter = req.user ? {user: req.user.id} : {user: null}
+    const task = await Task.deleteMany(filter)
+
+    const userLabel = req.user ? req.user.username : "guest"
+    return res.status(200).json({msg: `Deleted all tasks from ${userLabel}`})
+})
+
+module.exports = {getAllTask, createTask, getTask, updateTask, deleteTask, deleteAllTask}

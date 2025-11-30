@@ -5,12 +5,13 @@ const {
     createTask, 
     getTask, 
     updateTask, 
-    deleteTask
+    deleteTask,
+    deleteAllTask
 } = require('../controllers/tasks')
 const authenticateJWT = require('../middlewares/authentication.js')
 
 router.use(authenticateJWT)
-router.route('/').get(getAllTask).post(createTask)
+router.route('/').get(getAllTask).post(createTask).delete(deleteAllTask)
 router.route('/:id').get(getTask).patch(updateTask).delete(deleteTask)
 
 module.exports = router
