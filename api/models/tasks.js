@@ -15,6 +15,11 @@ const Tasks_Schema = new mongoose.Schema({
     completed: {
         type: Boolean,
         default: false
+    },
+
+    user: {
+        type: String,
+        default: null
     }
 })
 
