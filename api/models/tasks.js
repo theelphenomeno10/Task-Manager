@@ -17,7 +17,7 @@ const Tasks_Schema = new mongoose.Schema({
         default: false
     },
 
-    userID: {
+    user: {
         type: String,
         default: null
     }
