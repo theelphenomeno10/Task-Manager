@@ -3,7 +3,8 @@ const Task = require('../models/tasks.js')
 const dayjs = require('dayjs')
 
 const getAllTask = asyncWrapper(async (req, res, next) => {
-    const tasks = await Task.find({}).lean()
+    const filter = req.user ? { user: req.user.id } : {user: null}
+    const tasks = await Task.find(filter).lean()
 
     if (!tasks.length) {
         return res.status(404).json({msg: 'No tasks available'})
@@ -23,13 +24,15 @@ const createTask = asyncWrapper(async (req, res, next) => {
         return res.status(400).json({msg: 'No content provided'})
     }
 
-    const task = await Task.create(req.body)
+    const userId = req.user ? req.user.id : null;
+    const task = await Task.create({ ...req.body, user: userId });
     return res.status(201).json({task})
 })
 
 const getTask = asyncWrapper(async (req, res, next) => {
     const {id: taskID} = req.params
-    const task = await Task.findById(taskID)
+    const filter = req.user ? { _id: taskID, user: req.user.id } : { _id: taskID, user: null }
+    const task = await Task.findOne(filter);
 
     if (!task) {
         return res.status(404).json({msg: 'Task not found'})
@@ -46,6 +49,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
 
 const updateTask = asyncWrapper(async (req, res, next) => {
     const {id: taskID} = req.params
+    const filter = req.user ? { _id: taskID, user: req.user.id} : { _id: taskID, user: null}
     const task = await Task.findByIdAndUpdate(taskID, req.body, {
         new: true,
         runValidators: true
