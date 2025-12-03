@@ -12,9 +12,10 @@ const Tasks_Schema = new mongoose.Schema({
         default: Date.now
     },
 
-    completed: {
-        type: Boolean,
-        default: false
+    status: {
+        type: String,
+        enum: ["pending", "in progress", "done", "overdue"],
+        default: "pending"
     },
 
     user: {

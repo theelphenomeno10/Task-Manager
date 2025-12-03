@@ -24,8 +24,15 @@ const createTask = asyncWrapper(async (req, res, next) => {
         return res.status(400).json({msg: 'No content provided'})
     }
 
-    const userId = req.user ? req.user.id : null;
-    const task = await Task.create({ ...req.body, user: userId });
+    const userId = req.user ? req.user.id : null
+
+    const now = new Date()
+    const expiry = new Date(req.body.expiry_date)
+    if (isNaN(expiry.getTime()) || expiry < now){
+        return res.status(400).json({msg: 'Invalid expiry date'})
+    }
+
+    const task = await Task.create({ ...req.body, user: userId })
     return res.status(201).json({task})
 })
 
@@ -54,6 +61,15 @@ const updateTask = asyncWrapper(async (req, res, next) => {
         new: true,
         runValidators: true
     })
+
+    if (req.body.expiry_date){
+        const expire = new Date(req.body.expiry_date)
+        const now = new Date()
+
+        if (isNaN(expiry.getTime()) || expire < now){
+            return res.status(400).json({msg: 'Invalid time'})
+        }
+    }
 
     if (!task) {
         return res.status(404).json({msg: 'Task not found'})
