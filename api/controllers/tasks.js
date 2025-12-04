@@ -3,11 +3,47 @@ const Task = require('../models/tasks.js')
 const dayjs = require('dayjs')
 
 const getAllTask = asyncWrapper(async (req, res, next) => {
-    const filter = req.user ? { user: req.user.id } : { user: null }
+    const filter = {}
+
+    filter.user = req.user ? req.user.id : null
+
+    if (req.query.status){
+        const validStatus = ["pending", "in progress", "done", "overdue"]
+        if (!validStatus.includes(req.query.status)){
+            return res.status(400).json({msg: 'Invalid status parameter'})
+        }
+        filter.status = req.query.status
+    }
+
+    if (req.query.priority){
+        const now = Date.now()
+        const nowDate = new Date(now)
+        const in3d = new Date(now + 3 * DAY)
+        const in7d = new Date(now + 7 * DAY)
+        const in14d = new Date(now + 14 * DAY)
+
+        switch (req.query.priority){
+            case "high":
+                filter.expiry_date = { $gte: nowDate, $lte: in3d }
+                break
+
+            case "medium":
+                filter.expiry_date = { $gt: in3d, $lte: in7d }
+                break
+
+            case "low":
+                filter.expiry_date = { $gt: in7d, $lte: in14d }
+                break
+
+            default:
+                return res.status(400).json({msg: 'Invalid priority parameter'})
+        }
+    }
+
     const tasks = await Task.find(filter).lean()
 
     if (!tasks.length) {
-        return res.status(404).json({msg: 'No tasks available'})
+        return res.status(200).json({msg: 'No tasks available'})
     }
 
     const formattedTasks = tasks.map(t => ({    
@@ -18,6 +54,7 @@ const getAllTask = asyncWrapper(async (req, res, next) => {
 
     return res.status(200).json({formattedTasks})
 })
+
 
 const createTask = asyncWrapper(async (req, res, next) => {
     if (!req.body || Object.keys(req.body).length === 0) {
