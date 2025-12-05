@@ -3,6 +3,17 @@ const asyncWrapper = require("./async")
 const queryBuilder = asyncWrapper(async (req, res, next) => {
     req.filter = {}
     req.sort = {}
+    req.pagination = {}
+
+    let page = parseInt(req.query.page)
+    if (isNaN(page) || page < 1) page = 1
+
+    let limit = parseInt(req.query.limit)
+    if (isNaN(limit) || limit < 1) limit = 10
+
+    req.pagination.page = page
+    req.pagination.limit = limit
+    req.pagination.skip = (page - 1) * limit
 
     if (req.query.status){
         const validSort = ["pending", "in-progress", "done", "overdue"]

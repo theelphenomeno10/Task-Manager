@@ -5,10 +5,11 @@ const dayjs = require('dayjs')
 const getAllTask = asyncWrapper(async (req, res, next) => {
     const filter = req.filter || {}
     const sort = req.sort || {}
+    const {limit, page, skip} = req.pagination
 
     filter.user = req.user ? req.user.id : null
 
-    const tasks = await Task.find(filter).sort(sort).lean()
+    const tasks = await Task.find(filter).sort(sort).skip(skip).limit(limit).lean()
 
     if (!tasks.length) {
         return res.status(200).json({msg: 'No tasks available'})
@@ -20,7 +21,9 @@ const getAllTask = asyncWrapper(async (req, res, next) => {
         expiry_time: dayjs(t.expiry_date).format("HH:mm:ss")
     }))
 
-    return res.status(200).json({formattedTasks})
+    const total = await Task.countDocuments(filter)
+
+    return res.status(200).json({total, page, limit, formattedTasks})
 })
 
 const createTask = asyncWrapper(async (req, res, next) => {
