@@ -5,7 +5,7 @@ const queryBuilder = asyncWrapper(async (req, res, next) => {
     req.sort = {}
 
     if (req.query.status){
-        const validSort = ["pending", "in progress", "done", "overdue"]
+        const validSort = ["pending", "in-progress", "done", "overdue"]
 
         if (!validSort.includes(req.query.status)){
             return res.status(400).json({msg: 'Invalid filter parameter on status'})

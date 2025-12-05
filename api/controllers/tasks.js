@@ -95,7 +95,10 @@ const deleteTask = asyncWrapper(async (req, res, next) => {
 })
 
 const deleteAllTask = asyncWrapper(async (req, res, next) => {
-    const filter = req.user ? {user: req.user.id} : {user: null}
+    const filter = { ...req.filter }
+
+    filter.user = req.user ? req.user.id : null
+
     const task = await Task.deleteMany(filter)
 
     const userLabel = req.user ? req.user.username : "guest"

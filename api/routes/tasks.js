@@ -14,7 +14,7 @@ const authenticateJWT = require('../middlewares/authentication.js')
 const queryBuilder = require('../middlewares/query.js')
 
 router.use(authenticateJWT)
-router.route('/').get(queryBuilder, getAllTask).post(createTask).delete(deleteAllTask)
+router.route('/').get(queryBuilder, getAllTask).post(createTask).delete(queryBuilder, deleteAllTask)
 router.route('/:id').get(getTask).patch(updateTask).delete(deleteTask)
 
 module.exports = router
