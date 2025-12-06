@@ -13,7 +13,7 @@ const {
     loginValidator
 } = require('../validators/authenticate.js')
 
-const validateRequest = require('../middlewares/validate_request.js')
+const validateRequest = require('../middlewares/validator/validate_request.js')
 
 router.route('/register').post(registerValidator, validateRequest, register)
 router.route('/login').post(loginValidator, validateRequest, login)

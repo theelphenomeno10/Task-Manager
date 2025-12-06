@@ -1,4 +1,4 @@
-const asyncWrapper = require("./async")
+const asyncWrapper = require("../wrappers/async")
 
 const queryBuilder = asyncWrapper(async (req, res, next) => {
     req.filter = {}

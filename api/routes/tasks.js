@@ -9,9 +9,9 @@ const {
     deleteAllTask
 } = require('../controllers/tasks')
 
-const authenticateJWT = require('../middlewares/authentication.js')
+const authenticateJWT = require('../middlewares/authentication/authentication.js')
 
-const queryBuilder = require('../middlewares/query.js')
+const queryBuilder = require('../middlewares/query/query.js')
 
 router.use(authenticateJWT)
 router.route('/').get(queryBuilder, getAllTask).post(createTask).delete(queryBuilder, deleteAllTask)

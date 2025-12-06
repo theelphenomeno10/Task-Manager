@@ -1,5 +1,5 @@
-const authenticateMiddleware = require('../middlewares/authentication.js')
-const asyncWrapper = require('../middlewares/async.js')
+const authenticateMiddleware = require('../middlewares/authentication/authentication.js')
+const asyncWrapper = require('../middlewares/wrappers/async.js')
 const User = require('../models/users.js')
 const Task = require('../models/tasks.js')
 
