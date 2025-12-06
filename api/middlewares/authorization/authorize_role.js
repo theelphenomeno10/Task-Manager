@@ -8,4 +8,4 @@ const authorizeJWT = (...roles) => {
     }
 }
 
-module.exports = authorizeJWTuthorizeJWT
+module.exports = authorizeJWT
