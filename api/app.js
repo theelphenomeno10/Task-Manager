@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const tasks = require('./routes/tasks.js')
+const admin = require('./routes/admin.js')
 const {errorHandling} = require('./middlewares/errors/error_handling.js')
 const authRouter = require('./routes/authentication.js')
 const morganMiddleware = require('./middlewares/logging/morgan.js')
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 app.use('/api/v1', authRouter)
 app.use('/api/v1/tasks', tasks)
+app.use('/api/v1/admin', admin)
 
 app.use(errorHandling);
 

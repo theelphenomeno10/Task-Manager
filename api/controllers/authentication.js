@@ -6,13 +6,9 @@ const logger = require('../utils/logger.js')
 
 const register = asyncWrapper (async (req, res, next) => {
     const {username, password, email, role} = req.body
-    let assignedRole = "user"
+    let assignedRole = role ? role : "user"
 
-    if (req.user && req.user.role === "admin" && role) {
-        assignedRole = role
-    }
-
-    const user = await User.create({username, email, password, assignedRole})
+    const user = await User.create({username, email, password, role: assignedRole})
     const access_token = generateAccessToken(user)
     const refresh_token = generateRefreshToken(user)
 
@@ -22,10 +18,11 @@ const register = asyncWrapper (async (req, res, next) => {
         sameSite: "strict"
     })
 
-    res.status(201).json({
+    return res.status(201).json({
         msg: 'User registered successfully',
         user: {username, email},
-        acess_token: access_token,
+        role: assignedRole,
+        access_token: access_token
     })
 })
 
@@ -46,8 +43,9 @@ const login = asyncWrapper (async (req, res, next) => {
         sameSite: "strict"
     })
 
-    res.status(200).json({msg: 'Login successful',
+    return res.status(200).json({msg: 'Login successful',
         user: {username, email},
+        role: user.role,
         access_token: access_token,
     })
 })
