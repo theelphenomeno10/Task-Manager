@@ -74,8 +74,14 @@ const updateTask = asyncWrapper(async (req, res, next) => {
     }
     
     const filter = req.user ? { _id: taskID, user: req.user.id} : { _id: taskID, user: null}
-
-    const task = await Task.findOneAndUpdate(filter, req.body, {
+    const allowedUpdates = ["name", "expiry_date", "status"]
+    const update = {}
+    for (let b in req.body){
+        if (allowedUpdates.includes(b)){
+            update[b] = req.body[b]
+        }
+    }
+    const task = await Task.findOneAndUpdate(filter, update, {
         new: true,
         runValidators: true
     })
