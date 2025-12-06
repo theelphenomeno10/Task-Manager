@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 
 const {
-    getAllUser
+    getAllUser,
+    deleteUser
 } = require('../controllers/admin.js')
 
 const authorizeJWT = require('../middlewares/authorization/authorize_role.js')
@@ -15,5 +16,6 @@ router.use(requireLogin)
 router.use(authorizeJWT("admin"))
 
 router.route('/').get(queryBuilder, getAllUser)
+router.route('/:id').delete(deleteUser)
 
 module.exports = router

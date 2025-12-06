@@ -2,7 +2,6 @@ const asyncWrapper = require('../middlewares/wrappers/async.js')
 const User = require('../models/users.js')
 
 const getAllUser = asyncWrapper(async (req, res, next) => {
-    console.log(req.user.role)
     const filter = req.filter || {}
     const sort = req.sort || {}
     const {limit, page, skip} = req.pagination
@@ -18,4 +17,24 @@ const getAllUser = asyncWrapper(async (req, res, next) => {
     return res.status(200).json({total, page, limit, user})
 })
 
-module.exports = {getAllUser}
+const deleteUser = asyncWrapper(async (req, res, next) => {
+    if (req.user.id === req.params.id){
+        return res.status(400).json({msg: 'Cannot delete yourself'})
+    }
+
+    const user = await User.findById(req.params.id)
+
+    if (!user){
+        return res.status(404).json({msg: 'User not found'})
+    }
+
+    if (user.role === "admin"){
+        return res.status(403).json({msg: 'Cannot delete admin or higher'})
+    }
+
+    await User.findByIdAndDelete(userID)
+
+    return res.status(200).json({user})
+})
+
+module.exports = {getAllUser, deleteUser}
