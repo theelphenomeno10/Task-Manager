@@ -1,4 +1,4 @@
-const authorizeRole = (req, res, next) => {
+const requireLogin = (req, res, next) => {
     if (!req.user || !req.user.role){
         return res.status(403).json({msg: 'Access denied, log in to continue'})
     }
@@ -6,4 +6,4 @@ const authorizeRole = (req, res, next) => {
     next()
 }
 
-module.exports = authorizeRole
+module.exports = requireLogin
