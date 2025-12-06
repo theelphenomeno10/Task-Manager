@@ -63,20 +63,22 @@ const getTask = asyncWrapper(async (req, res, next) => {
 
 const updateTask = asyncWrapper(async (req, res, next) => {
     const {id: taskID} = req.params
-    const filter = req.user ? { _id: taskID, user: req.user.id} : { _id: taskID, user: null}
-    const task = await Task.findByIdAndUpdate(filter, req.body, {
-        new: true,
-        runValidators: true
-    })
 
     if (req.body.expiry_date){
         const expire = new Date(req.body.expiry_date)
         const now = new Date()
 
-        if (isNaN(expiry.getTime()) || expire < now){
+        if (isNaN(expire.getTime()) || expire < now){
             return res.status(400).json({msg: 'Invalid time'})
         }
     }
+    
+    const filter = req.user ? { _id: taskID, user: req.user.id} : { _id: taskID, user: null}
+
+    const task = await Task.findOneAndUpdate(filter, req.body, {
+        new: true,
+        runValidators: true
+    })
 
     if (!task) {
         return res.status(404).json({msg: 'Task not found'})
